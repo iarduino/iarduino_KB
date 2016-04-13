@@ -11,6 +11,7 @@ void	iarduino_KB::begin(uint8_t i){
 //			устанавливаем выводы в соответствующие им состояния
 			switch(KB_type_NUM){
 				case KB1:
+				case KB2:
 					pinMode(KB_pins_NUM[0], OUTPUT); digitalWrite(KB_pins_NUM[4], HIGH);			//	переводим вывод в режим передачи и устанавливаем состояние «1»
 					pinMode(KB_pins_NUM[1], OUTPUT); digitalWrite(KB_pins_NUM[4], HIGH);			//	переводим вывод в режим передачи и устанавливаем состояние «1»
 					pinMode(KB_pins_NUM[2], OUTPUT); digitalWrite(KB_pins_NUM[4], HIGH);			//	переводим вывод в режим передачи и устанавливаем состояние «1»
@@ -29,6 +30,7 @@ bool	iarduino_KB::check(uint8_t i){
 //			определяем номер кнопки нажатой в данный момент времени
 			switch(KB_type_NUM){
 				case KB1:
+				case KB2:
 					for(uint8_t j=0; j<4; j++){	digitalWrite(KB_pins_NUM[j], LOW);
 					for(uint8_t k=0; k<4; k++){ if(!digitalRead(KB_pins_NUM[k+4])){KB_pres_NOW=j*4+k;}}
 												digitalWrite(KB_pins_NUM[j], HIGH);
@@ -40,7 +42,7 @@ bool	iarduino_KB::check(uint8_t i){
 				case KEY_PRESS: n=KB_pres_NOW!=0xFF&&KB_pres_NOW==KB_pres_WAS?true:false; getNum=KB_nums_KB[KB_type_NUM][KB_pres_NOW]; getChar=KB_char_KB[KB_type_NUM][KB_pres_NOW]; break;
 				case KEY_DOWN:  n=KB_pres_NOW!=0xFF&&KB_pres_NOW!=KB_pres_WAS?true:false; getNum=KB_nums_KB[KB_type_NUM][KB_pres_NOW]; getChar=KB_char_KB[KB_type_NUM][KB_pres_NOW]; break;
 				case KEY_UP:    n=KB_pres_NOW==0xFF&&KB_pres_NOW!=KB_pres_WAS?true:false; getNum=KB_nums_KB[KB_type_NUM][KB_pres_WAS]; getChar=KB_char_KB[KB_type_NUM][KB_pres_WAS]; break;
-			}	KB_pres_WAS=KB_pres_NOW; return n;
+			}	if(n){delay(10);} KB_pres_WAS=KB_pres_NOW; return n;
 		}
 
 
